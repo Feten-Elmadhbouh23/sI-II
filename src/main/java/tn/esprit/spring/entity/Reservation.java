@@ -12,17 +12,24 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Reservation implements Serializable {
+@AllArgsConstructor
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private String idReservation;
-
-    @Temporal(TemporalType.DATE)
-
-    private Date anneUniversitaire;
+    private Long idReservation;
+    private Date anneeUniversitaire;
     private boolean estValide;
 
+    @Column(name = "date_debut")
+    private Date dateDebut;
+    @ManyToOne
+    @JoinColumn(name = "id_etudiant")
+    private Etudiant etudiant;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chambre")
+    private Chambre chambre;
 }
+
+

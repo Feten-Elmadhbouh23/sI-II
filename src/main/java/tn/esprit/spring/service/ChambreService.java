@@ -1,38 +1,54 @@
 package tn.esprit.spring.service;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.entity.Chambre;
-import tn.esprit.spring.repository.ChambreRepository;
-
+import tn.esprit.spring.entity.TypeChambre;
+import tn.esprit.spring.repository.IChambreRepository;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ChambreService {
+@RequiredArgsConstructor
+public class ChambreService implements IChambreService {
+    private final IChambreRepository chambreRepository;
 
-    @Autowired
-    private ChambreRepository chambreRepository;
-
-    public List<Chambre> getAllChambres() {
+    @Override
+    public List<Chambre> retrieveAllChambres() {
         return chambreRepository.findAll();
     }
 
-    public Optional<Chambre> getChambreById(Long id) {
-        return chambreRepository.findById(id);
+    @Override
+    public Chambre addChambre(Chambre c) {
+        return chambreRepository.save(c);
     }
 
-    public Chambre addChambre(Chambre chambre) {
-        return chambreRepository.save(chambre);
+    @Override
+    public Chambre updateChambre(Chambre c) {
+        return chambreRepository.save(c);
     }
 
-    public Chambre updateChambre(Long id, Chambre chambreDetails) {
-        Chambre chambre = chambreRepository.findById(id).orElseThrow();
-        chambre.setNumeroChambre(chambreDetails.getNumeroChambre());
-        chambre.setTypeC(chambreDetails.getTypeC());
-        return chambreRepository.save(chambre);
+    @Override
+    public Chambre retrieveChambre(long idChambre) {
+        return chambreRepository.findById(idChambre).orElse(null);
     }
 
-    public void deleteChambre(Long id) {
-        chambreRepository.deleteById(id);
+    @Override
+    public void deleteChambre(long idChambre) {
+        chambreRepository.deleteById(idChambre);
+    }
+
+    @Override
+    public List<Chambre> getChambresNonReserveParNomUniversiteEtTypeChambre(String nomUniversite, TypeChambre typeChambre) {
+        return chambreRepository.findChambresNonReserveesByNomUniversiteAndTypeChambre(nomUniversite, typeChambre);
+    }
+
+    public List<Chambre> getChambresParBlocEtType(long idBloc, TypeChambre typeChambre) {
+
+        return chambreRepository.findByBloc_IdBlocAndTypeChambre(idBloc, typeChambre);
+    }
+
+    public List<Chambre> getChambresParBlocEtTypeJPQL(long idBloc, TypeChambre typeChambre) {
+
+        return chambreRepository.findChambresByBlocAndTypeJPQL(idBloc, typeChambre);
     }
 }

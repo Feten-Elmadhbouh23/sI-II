@@ -1,25 +1,30 @@
 package tn.esprit.spring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Foyer implements Serializable {
+@AllArgsConstructor
+public class Foyer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private long idFoyer;
+    private Long idFoyer;
     private String nomFoyer;
-    private long capaciteFoyer;
+    private Long capaciteFoyer;
+
+    @OneToMany(mappedBy = "foyer", cascade = CascadeType.ALL)
+    private List<Bloc> blocs;
+
+    @OneToOne
+    @JoinColumn(name = "universite_id", referencedColumnName = "idUniversite")
+    private Universite universite;
 }
